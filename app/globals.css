@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/*
+ * CSS-first config (Tailwind v4) — replaces the old tailwind.config.ts.
+ * Everything that used to live in `theme.extend` in v3 is declared here
+ * as design tokens. Tailwind auto-generates utility classes from these
+ * (e.g. --color-arena-glow → bg-arena-glow, text-arena-glow, etc.),
+ * --font-score → font-score, --radius-bezel → rounded-bezel.
+ */
+@theme {
+  --color-arena-canvas: #0A0D0B;      /* pitch black, emerald undertone */
+  --color-arena-panel: #12160F;       /* raised bezel panel */
+  --color-arena-turf: #1F5D3C;
+  --color-arena-glow: #22C55E;
+  --color-arena-glow-soft: #3E8E63;
+  --color-arena-amber: #F59E0B;
+  --color-arena-flame: #C97B2E;
+  --color-arena-chalk: #F5F6F4;
+  --color-arena-chalk-dim: #EDEFEA;
+
+  --font-score: var(--font-teko), sans-serif;
+  --font-body: var(--font-manrope), sans-serif;
+
+  --radius-bezel: 2px; /* hard scoreboard corner, not the soft-card default */
+}
+
+:root {
+  color-scheme: dark;
+}
+
+/* Custom utilities that don't map to a single @theme token (v4's
+   @utility directive — replaces what used to be boxShadow/backgroundImage
+   entries in tailwind.config.ts's theme.extend). */
+@utility shadow-live-glow {
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.35), 0 0 24px rgba(34, 197, 94, 0.25);
+}
+@utility shadow-amber-glow {
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.35), 0 0 20px rgba(245, 158, 11, 0.2);
+}
+
+body {
+  background: #0A0D0B;
+  color: #F5F6F4;
+  font-family: var(--font-manrope), sans-serif;
+}
+
+/* Scoreboard LED scanline texture — used once, on the hero panel only */
+.led-scan {
+  position: relative;
+  isolation: isolate;
+}
+.led-scan::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.25) 0px,
+    rgba(0, 0, 0, 0.25) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+  z-index: 1;
+}
+
+/* Seam-stitch divider — the site's recurring motif, replaces hairline <hr> rules */
+.seam-divider {
+  height: 1px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(245, 246, 244, 0.16) 0 6px,
+    transparent 6px 14px
+  );
+}
+
+/* Scoreboard bezel panel: hard 2px radius, inset highlight, no soft drop shadow */
+.panel-bezel {
+  background: #12160F;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 0 rgba(245, 246, 244, 0.06);
+  border: 1px solid rgba(245, 246, 244, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
